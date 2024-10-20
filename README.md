@@ -2,18 +2,14 @@
 
 ## Instalacion 
 
-*1* **clonar el repositior** en su compu
+*1* **clonar el repositorio**
 
 git clone https://github.com/nacho-gonz/PDI-TUIA-2024-G12.git
 
-*2* **Instar las librerias necesarias** corriendo las primeras lineas del codigo:
-
-  import cv2
-  import numpy as np
-  import matplotlib.pyplot as plt
-  import os
-
-*3* **Descargar el resto de archivos** (la carpeta "examenes" que contiene las imagenes de los examenes y la imagen con detalle escondidos)
+*2* **Instalar las librerias necesarias**:
+  - opencv: mediante pip: *pip install opencv-contrib-Python*
+  - numpy: mediante pip: *pip install numpy*
+  - matplotlib: mediante pip: *pip install matplotlib*
 
 ## Luego de haber realizado los pasos previos:
 
