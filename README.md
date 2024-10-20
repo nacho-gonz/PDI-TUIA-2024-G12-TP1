@@ -2,18 +2,18 @@
 
 ## Instalacion 
 
-1 **clonar el repositior** en su compu
+*1* **clonar el repositior** en su compu
 
 git clone https://github.com/nacho-gonz/PDI-TUIA-2024-G12.git
 
-2 **Instar las librerias necesarias** corriendo las primeras lineas del codigo:
+*2* **Instar las librerias necesarias** corriendo las primeras lineas del codigo:
 
   import cv2
   import numpy as np
   import matplotlib.pyplot as plt
   import os
 
-3 **Descargar el resto de archivos** (la carpeta "examenes" que contiene las imagenes de los examenes y la imagen con detalle escondidos)
+*3* **Descargar el resto de archivos** (la carpeta "examenes" que contiene las imagenes de los examenes y la imagen con detalle escondidos)
 
 ## Luego de haber realizado los pasos previos:
 
@@ -23,8 +23,8 @@ git clone https://github.com/nacho-gonz/PDI-TUIA-2024-G12.git
 
 ## Opciones
 
-1 **Opcion 1** resolver el primer problema de la imagen con detalles escondidos
+*1* **Opcion 1** resolver el primer problema de la imagen con detalles escondidos
 
-2 **Opcion 2** resolver el segundo problema de corregir los examenes 
+*2* **Opcion 2** resolver el segundo problema de corregir los examenes 
 
-3 **Opcion 3** Salir
+*3* **Opcion 3** Salir
