@@ -8,23 +8,23 @@ import os
 
 def funcion1_tp_imagen(imagen : np.ndarray, tamanio_ven : int) -> np.ndarray:
 
-    imagen = cv2.imread('Imagen_con_detalles_escondidos.tif', cv2.IMREAD_GRAYSCALE)
+    imagen = cv2.imread('Imagen_con_detalles_escondidos.tif', cv2.IMREAD_GRAYSCALE) #Leemos la imagen
 
     imagen_estirada = cv2.medianBlur(imagen, 3) # Aplicamos un filtro para el ruido salt and pepper.
 
-    imagen_estirada = cv2.copyMakeBorder(imagen_estirada, tamanio_ven//2, tamanio_ven//2, 
-                                            tamanio_ven//2, tamanio_ven//2, cv2.BORDER_REPLICATE) # 
+    #Se agrega un borde para evitar problemas con los indicies feura de rango
+    imagen_estirada = cv2.copyMakeBorder(imagen_estirada, tamanio_ven//2, tamanio_ven//2, tamanio_ven//2, tamanio_ven//2, cv2.BORDER_REPLICATE) 
 
-    imagen_equalizada = np.zeros_like(imagen)
+    imagen_equalizada = np.zeros_like(imagen) #Creamos una imagen de de 0 del alto y ancho igual a la imagen original
 
     for i in range(imagen.shape[0]):
         for j in range(imagen.shape[1]):
 
-            local_window = imagen_estirada[i:i+tamanio_ven, j:j+tamanio_ven]
+            local_window = imagen_estirada[i:i+tamanio_ven, j:j+tamanio_ven] #Agarramos una imagen con los tamanios recortados
 
-            local_equalized = cv2.equalizeHist(local_window)
+            local_equalized = cv2.equalizeHist(local_window) #Ecualizamos el histograma
 
-            imagen_equalizada[i, j] = local_equalized[tamanio_ven//2, tamanio_ven//2]
+            imagen_equalizada[i, j] = local_equalized[tamanio_ven//2, tamanio_ven//2] #Asiganmos la imagen ecualizada en los rangos dados a una nueva iamgen
 
     return imagen_equalizada
 
@@ -62,12 +62,12 @@ def encontrar_mayor_componente_horizontal(image_binaria : np.ndarray) -> tuple[i
 
     # Recorrer todos los componentes conectados (excluyendo el fondo)
     for i in range(1, num_labels):
-        ancho = stats[i, cv2.CC_STAT_WIDTH]
-        alto = stats[i, cv2.CC_STAT_HEIGHT]
+        ancho = stats[i, cv2.CC_STAT_WIDTH] #obtenemos el ancho
+        alto = stats[i, cv2.CC_STAT_HEIGHT] #obtenemos el alto
 
-        if ancho > alto and ancho > max_ancho:
+        if ancho > alto and ancho > max_ancho: #Guardamos el mayor
             max_ancho = ancho
-            centroid_max = centroids[i]
+            centroid_max = centroids[i] #Guardamos el centroide para luego facilitar los calculos
 
     return max_ancho, centroid_max
 
@@ -258,13 +258,13 @@ def resolver_examenes() -> dict[str:[dict[str:str],dict[str:str],np.ndarray]]:
         _ , _, _, centroide_condicion = cv2.connectedComponentsWithStats(recuadro_condicion)    # Obtenemos el centroide del recuadr
 
         if examen_evaluado_value[1]['Condicion'] == 'A':    # Graficamos el circulo según la condición del alumno
-            cv2.circle(imagen_respuestas_alumnos,(int(centroide_condicion[0][0])+ancho_img,int(centroide_condicion[0][1]+examen_evaluado_value[2].shape[0]*indx_img)+1),7,(0,255,0),-1)
+            cv2.circle(imagen_respuestas_alumnos,(int(centroide_condicion[0][0])+ancho_img,int(centroide_condicion[0][1]+examen_evaluado_value[2].shape[0]*indx_img)+1),7,(0,255,0),-1) #Graficamos el circulo verde para las respuestas correctas de 7 de radio
         else:
-            cv2.circle(imagen_respuestas_alumnos,(int(centroide_condicion[0][0])+ancho_img,int(centroide_condicion[0][1]+examen_evaluado_value[2].shape[0]*indx_img)+1),7,(255,0,0),-1)
+            cv2.circle(imagen_respuestas_alumnos,(int(centroide_condicion[0][0])+ancho_img,int(centroide_condicion[0][1]+examen_evaluado_value[2].shape[0]*indx_img)+1),7,(255,0,0),-1) #Graficamos el circulo rojo para las respuestas incorrectas de 7 de radio
 
         indx_img += 1
 
-    cv2.line(imagen_respuestas_alumnos, (ancho_img,0), (ancho_img,examen_evaluado_value[2].shape[0]*len(imagenes)),(0,0,0),1,cv2.LINE_4)
+    cv2.line(imagen_respuestas_alumnos, (ancho_img,0), (ancho_img,examen_evaluado_value[2].shape[0]*len(imagenes)),(0,0,0),1,cv2.LINE_4) #Creamos la linea que separa la imagen de los nombres con el circulo de aprobacion o desaprobacion
 
     for nro_examen , info in examenes.items():
         print(f'Correcciones del {nro_examen}')
@@ -279,7 +279,7 @@ def resolver_examenes() -> dict[str:[dict[str:str],dict[str:str],np.ndarray]]:
 
 
 
-
+#Menu
 
 while True:
     print('1: Ver problema 1.\n2: Resolver examenes\n3: Salir del código\n')
