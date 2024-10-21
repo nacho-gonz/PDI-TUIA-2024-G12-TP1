@@ -13,7 +13,7 @@ git clone https://github.com/nacho-gonz/PDI-TUIA-2024-G12.git
 
 ## Ejecución del código:
 
-  Escribir en la terminal: python tp-pdi-noir-calvo-gonzalez.py
+  Escribir en la terminal: python TP1-PDI-Noir-Calvo-Gonzalez.py
 
 ## Opciones
 
