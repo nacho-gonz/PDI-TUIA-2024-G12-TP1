@@ -23,22 +23,24 @@ def funcion1_tp_imagen(tamanio_ven : int) -> np.ndarray:
 
     imagen = cv2.imread('Imagen_con_detalles_escondidos.tif', cv2.IMREAD_GRAYSCALE) # Leemos la imagen
 
-    imagen_estirada = cv2.medianBlur(imagen, 3) # Aplicamos un filtro para el ruido salt and pepper.
-
-    imagen_estirada = cv2.copyMakeBorder(imagen_estirada, tamanio_ven//2, tamanio_ven//2, tamanio_ven//2, tamanio_ven//2, cv2.BORDER_REPLICATE) # Se agrega un borde para evitar problemas con los indices fuera de rango
+    imagen_estirada = cv2.copyMakeBorder(imagen, tamanio_ven//2, tamanio_ven//2, tamanio_ven//2, tamanio_ven//2, cv2.BORDER_REPLICATE) # Se agrega un borde para evitar problemas con los indices fuera de rango
 
     imagen_equalizada = np.zeros_like(imagen) # Creamos una imagen de ceros del alto y ancho igual a la imagen original
 
     for i in range(imagen.shape[0]):
         for j in range(imagen.shape[1]):
 
-            local_window = imagen_estirada[i:i+tamanio_ven, j:j+tamanio_ven] # Agarramos una imagen con los tamaños recortados
+            ventana_local = imagen_estirada[i:i+tamanio_ven, j:j+tamanio_ven] # Agarramos una imagen con los tamaños recortados
 
-            local_equalized = cv2.equalizeHist(local_window) # Ecualizamos el histograma
+            equalizado_local = cv2.equalizeHist(ventana_local) # Ecualizamos el histograma
 
-            imagen_equalizada[i, j] = local_equalized[tamanio_ven//2, tamanio_ven//2] # Asiganmos la imagen ecualizada en los rangos dados a una nueva iamgen
+            imagen_equalizada[i, j] = equalizado_local[tamanio_ven//2, tamanio_ven//2] # Asiganmos la imagen ecualizada en los rangos dados a una nueva iamgen
     
-    return imagen_equalizada
+    imagen_sin_ruido = cv2.medianBlur(imagen_equalizada, 3) # Aplicamos un filtro para el ruido salt and pepper.
+
+    _, imagen_bianria = cv2.threshold(imagen_sin_ruido,70, 255, cv2.THRESH_BINARY) # binarisamos la imagen para corregir los valores que toadavia son grises, y pasarlos a blanco
+
+    return imagen_bianria
 
 
 
@@ -280,7 +282,7 @@ while True:
     opcion = int(input("Ingrese su opción: "))
     match opcion:
         case 1:
-            imagen_equalizada = funcion1_tp_imagen(24)
+            imagen_equalizada = funcion1_tp_imagen(20)
             plt.imshow(imagen_equalizada,cmap='gray'),plt.show()
 
         case 2:
