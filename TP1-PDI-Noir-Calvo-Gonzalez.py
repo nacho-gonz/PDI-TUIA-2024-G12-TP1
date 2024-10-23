@@ -5,7 +5,7 @@ import os
 
 # Problema 1
 
-def funcion1_tp_imagen(tamanio_ven : int) -> np.ndarray:
+def funcion1tp_imagen(M : int, N : int) -> np.ndarray:
     """
     Ecualiza el histograma de una imagen, localmente.
 
@@ -14,31 +14,36 @@ def funcion1_tp_imagen(tamanio_ven : int) -> np.ndarray:
     imagen : Imagen la cual su histograma va a ser ecualizada.
 
     tamanio_ven : Tamaño de la ventana para la ecualización del histograma.
-    
+
     Returns
     ----------
     imagen_equalizada : Imagen con su histograma ecualizado.
     """
-
+    
 
     imagen = cv2.imread('Imagen_con_detalles_escondidos.tif', cv2.IMREAD_GRAYSCALE) # Leemos la imagen
-
-    imagen_estirada = cv2.copyMakeBorder(imagen, tamanio_ven//2, tamanio_ven//2, tamanio_ven//2, tamanio_ven//2, cv2.BORDER_REPLICATE) # Se agrega un borde para evitar problemas con los indices fuera de rango
+    
+    if not M: 
+        M = imagen.shape[1]//8  # En caso de no haber ingresado un valor númerico el valor del M por default es el el tamaño del shape en Y divido 8.
+    if not N:
+        N = imagen.shape[0]//8  # En caso de no haber ingresado un valor númerico el valor del N por default es el el tamaño del shape en X divido 8.
+    
+    imagen_estirada = cv2.copyMakeBorder(imagen, M//2, M//2, N//2, N//2, cv2.BORDER_REPLICATE) # Se agrega un borde para evitar problemas con los indices fuera de rango
 
     imagen_equalizada = np.zeros_like(imagen) # Creamos una imagen de ceros del alto y ancho igual a la imagen original
 
     for i in range(imagen.shape[0]):
         for j in range(imagen.shape[1]):
 
-            ventana_local = imagen_estirada[i:i+tamanio_ven, j:j+tamanio_ven] # Agarramos una imagen con los tamaños recortados
+            ventana_local = imagen_estirada[i:i+M, j:j+N] # Agarramos una imagen con los tamaños recortados
 
             equalizado_local = cv2.equalizeHist(ventana_local) # Ecualizamos el histograma
 
-            imagen_equalizada[i, j] = equalizado_local[tamanio_ven//2, tamanio_ven//2] # Asiganmos la imagen ecualizada en los rangos dados a una nueva iamgen
-    
+            imagen_equalizada[i, j] = equalizado_local[M//2, N//2] # Asiganmos la imagen ecualizada en los rangos dados a una nueva iamgen
+
     imagen_sin_ruido = cv2.medianBlur(imagen_equalizada, 3) # Aplicamos un filtro para el ruido salt and pepper.
 
-    _, imagen_bianria = cv2.threshold(imagen_sin_ruido,70, 255, cv2.THRESH_BINARY) # binarisamos la imagen para corregir los valores que toadavia son grises, y pasarlos a blanco
+    _ , imagen_bianria = cv2.threshold(imagen_sin_ruido,70, 255, cv2.THRESH_BINARY) # binarisamos la imagen para corregir los valores que toadavia son grises, y pasarlos a blanco
 
     return imagen_bianria
 
@@ -282,7 +287,15 @@ while True:
     opcion = int(input("Ingrese su opción: "))
     match opcion:
         case 1:
-            imagen_equalizada = funcion1_tp_imagen(20)
+            try:
+                m = int(input('Ingrese M:')) # En caso de ingresar un valor no númerico se llama a la función con valores None
+            except:
+                m = None
+            try:
+                n = int(input('Ingrese N:')) # En caso de ingresar un valor no númerico se llama a la función con valores None
+            except:
+                n = None
+            imagen_equalizada = funcion1tp_imagen(m , n)
             plt.imshow(imagen_equalizada,cmap='gray'),plt.show()
 
         case 2:
